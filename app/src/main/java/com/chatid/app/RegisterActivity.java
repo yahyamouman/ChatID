@@ -69,10 +69,6 @@ public class RegisterActivity extends AppCompatActivity {
                 } else {
                     register(txt_username,txt_email,txt_password);
                 }
-                /* else {
-                    register(txt_username,txt_email,txt_password);
-                    Toast.makeText(RegisterActivity.this, "Registered successfully",Toast.LENGTH_SHORT).show();
-                }*/
             }
         });
     }
