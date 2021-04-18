@@ -24,7 +24,7 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 import java.util.HashMap;
 
 public class RegisterActivity extends AppCompatActivity {
-    //added github
+    //added github.
     MaterialEditText username, email, password;
     Button btn_register;
 
