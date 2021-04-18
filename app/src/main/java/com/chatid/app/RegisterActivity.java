@@ -26,7 +26,7 @@ import java.util.HashMap;
 public class RegisterActivity extends AppCompatActivity {
     MaterialEditText username, email, password;
     Button btn_register;
-    //Djohar Comment
+    //Djohar Commen
     FirebaseAuth auth;
     DatabaseReference reference;
 
