@@ -30,7 +30,7 @@ public class RegisterActivity extends AppCompatActivity {
     FirebaseAuth auth;
     DatabaseReference reference;
 
-    //Yahya Comment
+    //Yahya Comments
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
