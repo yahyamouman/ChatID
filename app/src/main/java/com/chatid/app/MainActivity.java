@@ -69,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
                 }else{
                     Glide.with(MainActivity.this).load(user.getImageURL()).into(profile_image);
                 }
-
             }
 
             @Override
@@ -89,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(viewPagerAdapter);
 
         tabLayout.setupWithViewPager(viewPager);
+
         }
 
     @Override
