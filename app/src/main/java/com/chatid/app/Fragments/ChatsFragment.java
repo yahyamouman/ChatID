@@ -39,7 +39,6 @@ public class ChatsFragment extends Fragment {
     private List<String> usersList;
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -68,9 +67,7 @@ public class ChatsFragment extends Fragment {
                     }
                     if (chat.getReceiver().equals(fuser.getUid())){
                         usersList.add(chat.getSender());
-
                     }
-
                 }
                 readChats();
 
