@@ -68,7 +68,7 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
 
-        recyclerView.findViewById(R.id.recycler_view);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setStackFromEnd(true);
@@ -113,7 +113,7 @@ public class MessageActivity extends AppCompatActivity {
                 } else {
                     Glide.with(MessageActivity.this).load(user.getImageURL()).into(profile_image);
                 }
-                readMesagges(fuser.getUid(), userid, user.getImageURL());
+                readMessages(fuser.getUid(), userid, user.getImageURL());
             }
 
             @Override
@@ -138,7 +138,7 @@ public class MessageActivity extends AppCompatActivity {
     }
 
 
-    private void readMesagges(String myid, String userid, String imageurl){
+    private void readMessages(String myid, String userid, String imageurl){
         mchat=new ArrayList<>();
 
         reference=FirebaseDatabase.getInstance().getReference("Chats");
@@ -148,11 +148,12 @@ public class MessageActivity extends AppCompatActivity {
                 mchat.clear();
                 for (DataSnapshot snapshot1 : snapshot.getChildren() ){
                     Chat chat= snapshot1.getValue(Chat.class);
-                    if (chat.getReceiver().equals(myid) && chat.getSender().equals(myid) ){
+                    if (chat.getReceiver().equals(fuser.getUid()) && chat.getSender().equals(userid)){
                         mchat.add(chat);
                     }
-
-
+                    if (chat.getReceiver().equals(userid) && chat.getSender().equals(fuser.getUid())){
+                        mchat.add(chat);
+                    }
                 }
 
                 messageAdapter = new MessageAdapter(MessageActivity.this,mchat, imageurl);
