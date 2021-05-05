@@ -66,10 +66,15 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User user=snapshot.getValue(User.class);
                 username.setText(user.getUsername());
+                try {
                 if (user.getImageURL().equals("default")){
                     profile_image.setImageResource(R.mipmap.ic_launcher);
                 }else{
                     Glide.with(MainActivity.this).load(user.getImageURL()).into(profile_image);
+                }
+                } catch (NullPointerException e){
+                    Intent intent = new Intent(MainActivity.this, StartActivity.class);
+                    startActivity(intent);
                 }
             }
 
