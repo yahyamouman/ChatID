@@ -92,8 +92,7 @@ public class ChatsFragment extends Fragment {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                mUsers.clear();
+                List<User> mUsersLocal = new ArrayList<>();
 
                 for(DataSnapshot snapshot1 : snapshot.getChildren()){
                     User user= snapshot1.getValue(User.class);
@@ -101,17 +100,19 @@ public class ChatsFragment extends Fragment {
                     //display 1 user from chats
                     for (String id : usersList){
                         if (user.getId().equals(id)){
-                            if (mUsers.size()!=0){
-                                for(User user1 : mUsers){
+                            if (mUsersLocal.size()!=0){
+                                for(User user1 : mUsersLocal){
                                     if(!user.getId().equals(user1.getId())){
-                                        mUsers.add(user);
+                                        mUsersLocal.add(user);
                                     }
                                 }
                             }else{
-                                mUsers.add(user);
+                                mUsersLocal.add(user);
                             }
                         }
                     }
+
+                    mUsers.addAll(mUsersLocal);
 
 
                 }
