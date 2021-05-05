@@ -111,7 +111,7 @@ public class ChatsFragment extends Fragment {
                             }
                         }
                     }
-
+                    mUsers.clear();
                     mUsers.addAll(mUsersLocal);
 
 
