@@ -46,29 +46,33 @@ public class LoginActivity extends AppCompatActivity {
                 String txt_email = email.getText().toString();
                 String txt_password = password.getText().toString();
 
-                if (TextUtils.isEmpty(txt_email) || TextUtils.isEmpty(txt_password)){
-                    email.requestFocus();
-                    password.requestFocus();
-                    Toast.makeText(LoginActivity.this,"Please fill all fields",Toast.LENGTH_SHORT).show();
-
-                }
-                else {
-                    auth.signInWithEmailAndPassword(txt_email,txt_password)
-                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if(task.isSuccessful()){
-                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        startActivity(intent);
-                                        finish();
-                                    } else {
-                                        Toast.makeText(LoginActivity.this, "Authentication failed", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-                }
+                login(txt_email,txt_password);
             }
         });
+    }
+
+    public void login(String txt_email, String txt_password){
+        if (TextUtils.isEmpty(txt_email) || TextUtils.isEmpty(txt_password)){
+            email.requestFocus();
+            password.requestFocus();
+            Toast.makeText(LoginActivity.this,"Please fill all fields",Toast.LENGTH_SHORT).show();
+
+        }
+        else {
+            auth.signInWithEmailAndPassword(txt_email,txt_password)
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if(task.isSuccessful()){
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                Toast.makeText(LoginActivity.this, "Authentication failed", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+        }
     }
 }

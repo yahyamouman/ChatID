@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
 
 
     <application
@@ -24,6 +25,9 @@
         </activity>
         <activity
             android:name=".RegisterActivity"
+            android:parentActivityName=".StartActivity" />
+        <activity
+            android:name=".BiometricActivity"
             android:parentActivityName=".StartActivity" />
         <activity android:name=".MainActivity" />
         <activity

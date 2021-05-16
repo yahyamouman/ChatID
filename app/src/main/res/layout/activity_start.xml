@@ -3,35 +3,45 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
     android:gravity="center"
     android:orientation="vertical"
-    android:background="@color/purple_700"
-    android:layout_height="match_parent"
     tools:context=".StartActivity">
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:srcCompat="@drawable/ic_baseline_chat_bubble_outline_24" />
+
     <TextView
+        android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:fontFamily="sans-serif-light"
         android:text="@string/app_name"
         android:textColor="#fff"
-        android:textSize="25sp"
-        android:textStyle="bold" />
+        android:textSize="48sp"
+        android:textStyle="normal" />
 
     <Button
+        android:id="@+id/login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
-        android:id="@+id/login"
-        android:background="@color/purple_700"
-        android:textColor="#fff"
-        android:text="login"/>
+        android:background="@drawable/common_google_signin_btn_text_dark_normal_background"
+        android:text="login"
+        android:textColor="#fff" />
+
     <Button
+        android:id="@+id/register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/purple_700"
-        android:textColor="#fff"
         android:layout_marginTop="10dp"
-        android:id="@+id/register"
-        android:text="register"/>
+        android:background="@drawable/common_google_signin_btn_text_dark_normal_background"
+        android:text="register"
+        android:textColor="@color/white" />
 
 </LinearLayout>

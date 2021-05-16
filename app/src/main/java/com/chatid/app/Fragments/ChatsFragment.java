@@ -103,7 +103,7 @@ public class ChatsFragment extends Fragment {
                             if (mUsersLocal.size()!=0){
                                 for(User user1 : mUsersLocal){
                                     if(!user.getId().equals(user1.getId())){
-                                        mUsersLocal.add(user);
+                                        mUsersLocal.add(user);break;
                                     }
                                 }
                             }else{
