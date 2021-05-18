@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,7 +48,11 @@ import static android.app.Activity.RESULT_OK;
 public class ProfileFragment extends Fragment {
 
     CircleImageView image_profile;
-    TextView username;
+    ImageView id_image_profile;
+    TextView username,email;
+    TextView edit_profile;
+
+    TextView verified,notVerified;
 
     DatabaseReference reference;
     FirebaseUser fuser;
@@ -65,7 +70,12 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         image_profile = view.findViewById(R.id.profile_image);
+        id_image_profile = view.findViewById(R.id.profile_id);
         username = view.findViewById(R.id.username);
+        email = view.findViewById(R.id.email);
+        edit_profile = view.findViewById(R.id.edit_profile);
+        verified = view.findViewById(R.id.verified);
+        notVerified = view.findViewById(R.id.not_verified);
 
 
         storageReference = FirebaseStorage.getInstance().getReference("uploads");
@@ -79,10 +89,20 @@ public class ProfileFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 username.setText(user.getUsername());
+                email.setText(user.getEmail());
                 if (user.getImageURL().equals("default")){
                     image_profile.setImageResource(R.mipmap.ic_launcher);
                 } else {
                     Glide.with(getContext()).load(user.getImageURL()).into(image_profile);
+                }
+                if (user.getIdImageURL().equals("default")){
+                    id_image_profile.setImageResource(R.mipmap.ic_launcher);
+                    verified.setVisibility(View.INVISIBLE);
+                    notVerified.setVisibility(View.VISIBLE);
+                } else {
+                    Glide.with(getContext()).load(user.getIdImageURL()).into(id_image_profile);
+                    verified.setVisibility(View.VISIBLE);
+                    notVerified.setVisibility(View.INVISIBLE);
                 }
             }
 
@@ -92,7 +112,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        image_profile.setOnClickListener(new View.OnClickListener() {
+        edit_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openImage();

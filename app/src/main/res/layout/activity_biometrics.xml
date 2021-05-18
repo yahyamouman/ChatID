@@ -74,7 +74,8 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="60dp"
             android:background="@drawable/ic_baseline_face_24_2"
-            android:textColor="#fff" />
+            android:textColor="#fff"
+            app:backgroundTint="#03A9F4" />
 
         <TextView
             android:id="@+id/textView3"
@@ -92,7 +93,8 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/background_left"
             android:text="login"
-            android:textColor="#fff" />
+            android:textColor="#fff"
+            app:backgroundTint="@color/teal_700" />
 
     </LinearLayout>
 
