@@ -26,8 +26,10 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.chatid.app.Model.User;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -56,6 +58,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -222,6 +225,21 @@ public class VerifyActivity extends AppCompatActivity {
 
         StorageReference riversRef = storageReference.child("images/"+uid);
         riversRef.putFile(imageuri);
+
+
+
+        riversRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                Uri downloadUri = (Uri) task.getResult();
+                String mUri = downloadUri.toString();
+
+                reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
+                HashMap<String, Object> map = new HashMap<>();
+                map.put("idImageURL", mUri);
+                reference.updateChildren(map);
+            }
+        });
 
     }
 
