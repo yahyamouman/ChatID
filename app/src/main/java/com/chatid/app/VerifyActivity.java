@@ -26,6 +26,10 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.face.Face;
 import com.google.mlkit.vision.face.FaceDetection;
@@ -53,6 +57,8 @@ public class VerifyActivity extends AppCompatActivity {
     protected Interpreter tflite;
     private  int imageSizeX;
     private  int imageSizeY;
+    private FirebaseStorage storage;
+    private StorageReference storageReference;
 
     private static final float IMAGE_MEAN = 0.0f;
     private static final float IMAGE_STD = 1.0f;
@@ -60,6 +66,7 @@ public class VerifyActivity extends AppCompatActivity {
     public Bitmap oribitmap,testbitmap;
     public static Bitmap cropped;
     Uri imageuri;
+    Uri imageuri1;
 
     ImageView oriImage,testImage;
     Button buverify;
@@ -72,6 +79,9 @@ public class VerifyActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verify);
+
+        storage=FirebaseStorage.getInstance();
+        storageReference= storage.getReference();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -135,8 +145,10 @@ public class VerifyActivity extends AppCompatActivity {
 
                 double distance=calculate_distance(ori_embedding,test_embedding);
 
-                if(distance<6.0)
+                if(distance<6.0) {
                     result_text.setText("Result : Same Faces");
+                    uploadPicture(imageuri1);
+                }
 
                 else
                     result_text.setText("Result : Different Faces");
@@ -144,6 +156,18 @@ public class VerifyActivity extends AppCompatActivity {
             }
 
         });
+
+    }
+
+    private void uploadPicture(Uri imageuri) {
+
+        FirebaseUser fuser;
+        String uid;
+        fuser=FirebaseAuth.getInstance().getCurrentUser();
+        uid=fuser.getUid();
+
+        StorageReference riversRef = storageReference.child("images/"+uid);
+        riversRef.putFile(imageuri);
 
     }
 
@@ -203,9 +227,9 @@ public class VerifyActivity extends AppCompatActivity {
         }
 
         if(requestCode==13 && resultCode==RESULT_OK && data!=null) {
-            imageuri = data.getData();
+            imageuri1 = data.getData();
             try {
-                testbitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageuri);
+                testbitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageuri1);
                 testImage.setImageBitmap(testbitmap);
                 face_detector(testbitmap,"test");
             } catch (IOException e) {
