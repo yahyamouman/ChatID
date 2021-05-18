@@ -121,7 +121,7 @@ public class VerifyActivity extends AppCompatActivity {
                         Glide.with(getApplicationContext()).load(user.getImageURL()).into(profile_image);
                     }
                 } catch (NullPointerException e){
-                    Intent intent = new Intent(MainActivity.this, StartActivity.class);
+                    Intent intent = new Intent(VerifyActivity.this, StartActivity.class);
                     startActivity(intent);
                 }
             }
