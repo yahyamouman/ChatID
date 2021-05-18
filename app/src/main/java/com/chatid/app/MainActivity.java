@@ -115,6 +115,12 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this,StartActivity.class));
                 finish();
                 return true;
+
+            case R.id.verify:
+
+                startActivity(new Intent(MainActivity.this,VerifyActivity.class));
+                finish();
+                return true;
         }
         return false;
     }

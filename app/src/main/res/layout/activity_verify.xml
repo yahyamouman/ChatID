@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/teal_700"
+            android:theme="@style/Widget.AppCompat.Light.ActionBar"
+            app:popupTheme="@style/MenuStyle">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:id="@+id/profile_image"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/username"
+                android:layout_marginLeft="25dp"
+                android:textColor="@color/purple_700"
+                android:textStyle="bold"
+                android:layout_marginStart="25dp"/>
+
+
+
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/title"
+        android:text="Face Verfication"
+        android:textColor="@color/browser_actions_text_color"
+        android:layout_marginTop="70dp"
+        android:textSize="30dp"
+        android:textStyle="bold"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/result"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/title"
+        android:text="Result : "
+        android:textColor="@color/browser_actions_text_color"
+        android:layout_marginTop="30dp"
+        android:textSize="25dp"
+        android:textStyle="bold"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_above="@+id/llay">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Original Image"
+            android:textColor="@color/browser_actions_text_color"
+            android:textStyle="bold"
+            android:layout_marginBottom="20dp"
+            android:layout_marginStart="30dp"
+            android:textSize="20dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Test Image"
+            android:textColor="@color/browser_actions_text_color"
+            android:layout_marginBottom="20dp"
+            android:textStyle="bold"
+            android:layout_marginStart="90dp"
+            android:textSize="20dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/llay"
+        android:layout_centerVertical="true">
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/auth_face"
+            android:id="@+id/image1">
+        </ImageView>
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_margin="10dp"
+            android:src="@drawable/auth_face"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/image2"/>
+
+    </LinearLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/verify"
+        android:layout_below="@+id/llay"
+        android:text="verify"
+        android:layout_margin="50dp"
+        android:textColor="#000"
+        android:background="@color/browser_actions_text_color"
+        android:layout_centerHorizontal="true"/>
+
+</RelativeLayout>
