@@ -24,10 +24,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.chatid.app.Model.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.mlkit.vision.common.InputImage;
@@ -51,8 +58,16 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 
 public class VerifyActivity extends AppCompatActivity {
+
+    CircleImageView profile_image;
+    TextView username;
+
+    FirebaseUser firebaseUser;
+    DatabaseReference reference;
 
     protected Interpreter tflite;
     private  int imageSizeX;
@@ -83,12 +98,41 @@ public class VerifyActivity extends AppCompatActivity {
         storage=FirebaseStorage.getInstance();
         storageReference= storage.getReference();
 
+        profile_image=findViewById(R.id.profile_image);
+        username=findViewById(R.id.username);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Verify identity");
 
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        //upload all records and look for a specific child among them
+        reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
 
-        initComponents();
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user=snapshot.getValue(User.class);
+                username.setText(user.getUsername());
+                try {
+                    if (user.getImageURL().equals("default")){
+                        profile_image.setImageResource(R.mipmap.ic_launcher);
+                    }else{
+                        Glide.with(getApplicationContext()).load(user.getImageURL()).into(profile_image);
+                    }
+                } catch (NullPointerException e){
+                    Intent intent = new Intent(MainActivity.this, StartActivity.class);
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+            initComponents();
     }
 
     private void initComponents() {
@@ -147,12 +191,22 @@ public class VerifyActivity extends AppCompatActivity {
 
                 if(distance<6.0) {
                     result_text.setText("Result : Same Faces");
+                    Toast.makeText(getApplicationContext(),
+                            "Identification Successful!", Toast.LENGTH_SHORT)
+                            .show();
                     uploadPicture(imageuri1);
+                    startActivity(new Intent(VerifyActivity.this,VerifyActivity.class));
+                    finish();
                 }
 
-                else
+                else {
                     result_text.setText("Result : Different Faces");
-
+                    Toast.makeText(getApplicationContext(),
+                            "Identification Failed", Toast.LENGTH_SHORT)
+                            .show();
+                    startActivity(new Intent(VerifyActivity.this, VerifyActivity.class));
+                    finish();
+                }
             }
 
         });
