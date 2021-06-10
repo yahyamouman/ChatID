@@ -11,7 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.chatid.app.Adapter.ManageUserAdapter;
 import com.chatid.app.Adapter.UserAdapter;
+import com.chatid.app.Model.Chat;
 import com.chatid.app.Model.ContactItem;
 import com.chatid.app.Model.User;
 import com.chatid.app.R;
@@ -26,11 +28,10 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class UsersFragment extends Fragment {
+public class ManageContactsFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    private UserAdapter userAdapter;
+    private ManageUserAdapter userAdapter;
     private List<User> mUsers;
     FirebaseUser fuser;
     DatabaseReference reference;
@@ -40,9 +41,8 @@ public class UsersFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_users, container, false);
-
-        recyclerView = view.findViewById(R.id.recycler_view);
+        View view = inflater.inflate(R.layout.fragment_manage_contacts, container, false);
+        recyclerView = view.findViewById(R.id.manage_contact_recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -109,7 +109,7 @@ public class UsersFragment extends Fragment {
 
                 }
 
-                userAdapter = new UserAdapter(getContext(),mUsers, true);
+                userAdapter = new ManageUserAdapter(getContext(),mUsers, true);
                 recyclerView.setAdapter(userAdapter);
 
 

@@ -37,7 +37,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 
-import java.lang.ref.Reference;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -73,7 +72,7 @@ public class ProfileFragment extends Fragment {
         id_image_profile = view.findViewById(R.id.profile_id);
         username = view.findViewById(R.id.username);
         email = view.findViewById(R.id.email);
-        edit_profile = view.findViewById(R.id.edit_profile);
+        edit_profile = view.findViewById(R.id.edit_image);
         verified = view.findViewById(R.id.verified);
         notVerified = view.findViewById(R.id.not_verified);
 

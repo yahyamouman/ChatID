@@ -3,13 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/manage"
+        android:title="Manage Users"
+        app:showAsAction="never"/>
+    <item
         android:id="@+id/verify"
-        android:title="Verify"
+        android:title="Validate Identity"
         app:showAsAction="never"/>
     <item
         android:id="@+id/logout"
         android:title="LogOut"
         app:showAsAction="never"/>
-
 
 </menu>

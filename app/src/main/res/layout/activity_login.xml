@@ -32,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Sign in with google"
+            android:text="Register"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -41,7 +41,7 @@
             android:layout_height="104dp" >
 
             <Button
-                android:id="@+id/btn_login_google"
+                android:id="@+id/login_register"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/common_google_signin_btn_icon_disabled"

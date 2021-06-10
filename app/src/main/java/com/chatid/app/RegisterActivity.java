@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.chatid.app.Model.ContactItem;
+import com.chatid.app.Model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -21,7 +23,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 public class RegisterActivity extends AppCompatActivity {
     MaterialEditText username, email, password;
@@ -85,14 +90,14 @@ public class RegisterActivity extends AppCompatActivity {
 
                             reference = FirebaseDatabase.getInstance().getReference("Users").child(userId);
 
-                            HashMap<String, String> hashMap = new HashMap<>();
-                            hashMap.put("id", userId);
-                            hashMap.put("username", username);
-                            hashMap.put("imageURL", "default");
-                            hashMap.put("idImageURL", "default");
-                            hashMap.put("email", email);
+                            User user = new User();
+                            user.setUsername(username);
+                            user.setId(userId);
+                            user.setEmail(email);
+                            user.setImageURL("default");
+                            user.setIdImageURL("default");
 
-                            reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            reference.setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()){

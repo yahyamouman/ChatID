@@ -63,7 +63,6 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-
 public class VerifyActivity extends AppCompatActivity {
 
     CircleImageView profile_image;

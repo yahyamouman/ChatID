@@ -1,5 +1,7 @@
 package com.chatid.app;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,8 +20,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.chatid.app.Fragments.AddContactFragment;
 import com.chatid.app.Fragments.ChatsFragment;
+import com.chatid.app.Fragments.ManageContactsFragment;
 import com.chatid.app.Fragments.ProfileFragment;
+import com.chatid.app.Fragments.RequestsFragment;
 import com.chatid.app.Fragments.UsersFragment;
 import com.chatid.app.Model.User;
 import com.google.android.material.tabs.TabLayout;
@@ -36,7 +41,7 @@ import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MainActivity extends AppCompatActivity {
+public class ManageContacts extends AppCompatActivity {
 
     CircleImageView profile_image;
     TextView username;
@@ -46,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_manage_contacts);
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -67,13 +72,13 @@ public class MainActivity extends AppCompatActivity {
                 User user=snapshot.getValue(User.class);
                 username.setText(user.getUsername());
                 try {
-                if (user.getImageURL().equals("default")){
-                    profile_image.setImageResource(R.mipmap.ic_launcher);
-                }else{
-                    Glide.with(getApplicationContext()).load(user.getImageURL()).into(profile_image);
-                }
+                    if (user.getImageURL().equals("default")){
+                        profile_image.setImageResource(R.mipmap.ic_launcher);
+                    }else{
+                        Glide.with(getApplicationContext()).load(user.getImageURL()).into(profile_image);
+                    }
                 } catch (NullPointerException e){
-                    Intent intent = new Intent(MainActivity.this, StartActivity.class);
+                    Intent intent = new Intent(ManageContacts.this, StartActivity.class);
                     startActivity(intent);
                 }
             }
@@ -89,9 +94,9 @@ public class MainActivity extends AppCompatActivity {
 
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        viewPagerAdapter.addFragment(new ChatsFragment(), "Chats");
-        viewPagerAdapter.addFragment(new UsersFragment(), "Users");
-        viewPagerAdapter.addFragment(new ProfileFragment(), "Profile");
+        viewPagerAdapter.addFragment(new RequestsFragment(), "Requests");
+        viewPagerAdapter.addFragment(new ManageContactsFragment(), "My Contacts");
+        viewPagerAdapter.addFragment(new AddContactFragment(), "Add Contact");
 
 
         viewPager.setAdapter(viewPagerAdapter);
@@ -112,19 +117,13 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(MainActivity.this,StartActivity.class));
+                startActivity(new Intent(ManageContacts.this,StartActivity.class));
                 finish();
                 return true;
 
             case R.id.verify:
 
-                startActivity(new Intent(MainActivity.this,VerifyActivity.class));
-                finish();
-                return true;
-
-            case R.id.manage:
-
-                startActivity(new Intent(MainActivity.this,ManageContacts.class));
+                startActivity(new Intent(ManageContacts.this,VerifyActivity.class));
                 finish();
                 return true;
         }
