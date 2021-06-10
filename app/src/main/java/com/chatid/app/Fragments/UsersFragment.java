@@ -55,14 +55,11 @@ public class UsersFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 usersList.clear();
-                for (DataSnapshot snapshot1 : snapshot.getChildren()){
-
-                    User user = snapshot1.getValue(User.class);
+                    User user = snapshot.getValue(User.class);
                     for(ContactItem contactItem : user.getContactList()){
                         if(contactItem.getStatus().equals("Friend"))
                             usersList.add(contactItem.getId());
                     }
-                }
                 readContacts();
 
             }

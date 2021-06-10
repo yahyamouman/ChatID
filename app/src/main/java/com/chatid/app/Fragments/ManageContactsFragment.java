@@ -48,21 +48,19 @@ public class ManageContactsFragment extends Fragment {
 
         fuser= FirebaseAuth.getInstance().getCurrentUser();
 
-        usersList=new ArrayList<>();
+        mUsers = new ArrayList<>();
+        usersList = new ArrayList<>();
 
         reference= FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 usersList.clear();
-                for (DataSnapshot snapshot1 : snapshot.getChildren()){
-
-                    User user = snapshot1.getValue(User.class);
+                    User user = snapshot.getValue(User.class);
                     for(ContactItem contactItem : user.getContactList()){
                         if(contactItem.getStatus().equals("Friend"))
                             usersList.add(contactItem.getId());
                     }
-                }
                 readContacts();
 
             }

@@ -11,9 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.chatid.app.Adapter.AcceptUserAdapter;
-import com.chatid.app.Adapter.UserAdapter;
-import com.chatid.app.Model.Chat;
+import com.chatid.app.Adapter.RequestUserAdapter;
 import com.chatid.app.Model.ContactItem;
 import com.chatid.app.Model.User;
 import com.chatid.app.R;
@@ -31,7 +29,7 @@ import java.util.List;
 public class RequestsFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    private AcceptUserAdapter userAdapter;
+    private RequestUserAdapter userAdapter;
     private List<User> mUsers;
     FirebaseUser fuser;
     DatabaseReference reference;
@@ -55,14 +53,10 @@ public class RequestsFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 usersList.clear();
-                for (DataSnapshot snapshot1 : snapshot.getChildren()){
-
-                    User user = snapshot1.getValue(User.class);
-                    for(ContactItem contactItem : user.getContactList()){
-                        if(contactItem.getStatus().equals("Request"))
-                        usersList.add(contactItem.getId());
-                    }
-                    break;
+                User user = snapshot.getValue(User.class);
+                for(ContactItem contactItem : user.getContactList()){
+                    if(contactItem.getStatus().equals("Request"))
+                    usersList.add(contactItem.getId());
                 }
                 readContacts();
 
@@ -110,7 +104,7 @@ public class RequestsFragment extends Fragment {
 
                 }
 
-                userAdapter = new AcceptUserAdapter(getContext(),mUsers, true);
+                userAdapter = new RequestUserAdapter(getContext(),mUsers, true);
                 recyclerView.setAdapter(userAdapter);
 
 

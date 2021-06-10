@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.chatid.app.Adapter.AddUserAdapter;
 import com.chatid.app.Adapter.UserAdapter;
 import com.chatid.app.Model.Chat;
+import com.chatid.app.Model.ContactItem;
 import com.chatid.app.Model.User;
 import com.chatid.app.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,7 +35,6 @@ public class AddContactFragment extends Fragment {
     private List<User> mUsers;
     FirebaseUser fuser;
     DatabaseReference reference;
-    private List<String> usersList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,82 +47,43 @@ public class AddContactFragment extends Fragment {
 
         fuser= FirebaseAuth.getInstance().getCurrentUser();
 
-        usersList=new ArrayList<>();
+        mUsers = new ArrayList<>();
 
-        reference= FirebaseDatabase.getInstance().getReference("Chats");
+        reference= FirebaseDatabase.getInstance().getReference("Users");
         reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                usersList.clear();
-                for (DataSnapshot snapshot1 : snapshot.getChildren()){
-
-                    Chat chat = snapshot1.getValue(Chat.class);
-
-                    if (chat.getSender().equals(fuser.getUid())){
-                        usersList.add(chat.getReceiver());
-                    }
-                    if (chat.getReceiver().equals(fuser.getUid())){
-                        usersList.add(chat.getSender());
-                    }
-                }
-                readChats();
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-
-        return view;
-    }
-
-    private void readChats(){
-        mUsers=new ArrayList<>();
-        reference=FirebaseDatabase.getInstance().getReference("Users");
-
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<User> mUsersLocal = new ArrayList<>();
-
-                for(DataSnapshot snapshot1 : snapshot.getChildren()){
-                    User user= snapshot1.getValue(User.class);
-
-                    //display 1 user from chats
-                    for (String id : usersList){
-                        if (user.getId().equals(id)){
-                            if (mUsersLocal.size()!=0){
-                                for(User user1 : mUsersLocal){
-                                    if(!user.getId().equals(user1.getId())){
-                                        mUsersLocal.add(user);break;
-                                    }
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot snapshot1 : snapshot.getChildren()){
+                        User user = snapshot1.getValue(User.class);
+                        if (!user.getId().equals(fuser.getUid())){
+                            boolean lock = false;
+                            for (ContactItem contactItem : user.getContactList()){
+                                if (contactItem.getStatus().equals("Friend")){
+                                    lock = true;
                                 }
-                            }else{
-                                mUsersLocal.add(user);
+                                else if (contactItem.getStatus().equals("Sent")){
+                                    lock = true;
+                                }
+                                else if (contactItem.getStatus().equals("Request")){
+                                    lock = true;
+                                }
+                            }
+                            if (!lock){
+                                mUsers.add(user);
                             }
                         }
                     }
-                    mUsers.clear();
-                    mUsers.addAll(mUsersLocal);
 
-
+                    addUserAdapter = new AddUserAdapter(getContext(),mUsers, true);
+                    recyclerView.setAdapter(addUserAdapter);
                 }
 
-                addUserAdapter = new AddUserAdapter(getContext(),mUsers, true);
-                recyclerView.setAdapter(addUserAdapter);
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
+                }
+            });
 
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-
+        return view;
     }
 }

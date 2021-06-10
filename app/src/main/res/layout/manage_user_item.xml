@@ -51,7 +51,7 @@
         android:layout_toEndOf="@id/profile_image"/>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_add_contact"
+        android:id="@+id/btn_delete_contact"
         android:layout_width="46dp"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"

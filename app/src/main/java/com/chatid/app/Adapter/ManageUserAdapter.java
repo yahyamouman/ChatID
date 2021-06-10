@@ -34,6 +34,7 @@ public class ManageUserAdapter extends RecyclerView.Adapter<ManageUserAdapter.Vi
 
     FirebaseUser fuser;
     DatabaseReference reference;
+    DatabaseReference reference1;
     private List<String> usersList;
     private User user;
 
@@ -94,7 +95,7 @@ public class ManageUserAdapter extends RecyclerView.Adapter<ManageUserAdapter.Vi
         public ImageView profile_image;
         private ImageView img_on;
         private ImageView img_off;
-        private ButtonBarLayout btn_delete;
+        private androidx.appcompat.widget.AppCompatButton btn_delete;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -103,7 +104,7 @@ public class ManageUserAdapter extends RecyclerView.Adapter<ManageUserAdapter.Vi
             this.profile_image = itemView.findViewById(R.id.profile_image);
             this.img_on = itemView.findViewById(R.id.img_on);
             this.img_off = itemView.findViewById(R.id.img_off);
-            this.btn_delete = itemView.findViewById(R.id.btn_add_contact);
+            this.btn_delete = itemView.findViewById(R.id.btn_delete_contact);
 
             btn_delete.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -111,9 +112,9 @@ public class ManageUserAdapter extends RecyclerView.Adapter<ManageUserAdapter.Vi
                     //remove contact from database
                     fuser = FirebaseAuth.getInstance().getCurrentUser();
 
-                    reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
+                    reference1= FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
 
-                    reference.addValueEventListener(new ValueEventListener() {
+                    reference1.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             user = snapshot.getValue(User.class);
@@ -130,19 +131,16 @@ public class ManageUserAdapter extends RecyclerView.Adapter<ManageUserAdapter.Vi
                     reference.addValueEventListener(new ValueEventListener(){
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            usersList.clear();
-                            for (DataSnapshot snapshot1 : snapshot.getChildren()) {
-
-                                User user = snapshot1.getValue(User.class);
+                                User user = snapshot.getValue(User.class);
                                 for (ContactItem contactItem : user.getContactList()){
                                     if (contactItem.getId().equals(mUsers.get(getAdapterPosition()).getId())){
                                         contactItem.setStatus("Removed");
+                                        notifyItemRangeChanged(getAdapterPosition(),mUsers.size());
+                                        notifyItemRemoved(getAdapterPosition());
                                     }
                                 }
 
                                 reference.setValue(user);
-                                break;
-                            }
                         }
 
                         @Override
@@ -152,8 +150,7 @@ public class ManageUserAdapter extends RecyclerView.Adapter<ManageUserAdapter.Vi
                     });
                     //
                     //mUsers.remove(getAdapterPosition());
-                    notifyItemRangeChanged(getAdapterPosition(),mUsers.size());
-                    notifyItemRemoved(getAdapterPosition());
+
                 }
             });
 

@@ -49,7 +49,7 @@ public class AddUserAdapter extends RecyclerView.Adapter<AddUserAdapter.ViewHold
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.manage_user_item, parent,false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.add_user_item, parent,false);
         return new AddUserAdapter.ViewHolder(view);
     }
 
@@ -75,15 +75,6 @@ public class AddUserAdapter extends RecyclerView.Adapter<AddUserAdapter.ViewHold
             holder.img_on.setVisibility(View.GONE);
             holder.img_off.setVisibility(View.GONE);
         }
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mContext, MessageActivity.class);
-                intent.putExtra("userid", user.getId());
-                mContext.startActivity(intent);
-            }
-        });
     }
 
     @Override
@@ -96,7 +87,7 @@ public class AddUserAdapter extends RecyclerView.Adapter<AddUserAdapter.ViewHold
         public ImageView profile_image;
         private ImageView img_on;
         private ImageView img_off;
-        private ButtonBarLayout btn_delete;
+        private androidx.appcompat.widget.AppCompatButton btn_add;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -105,12 +96,12 @@ public class AddUserAdapter extends RecyclerView.Adapter<AddUserAdapter.ViewHold
             this.profile_image = itemView.findViewById(R.id.profile_image);
             this.img_on = itemView.findViewById(R.id.img_on);
             this.img_off = itemView.findViewById(R.id.img_off);
-            this.btn_delete = itemView.findViewById(R.id.btn_add_contact);
+            this.btn_add = itemView.findViewById(R.id.btn_add_contact);
 
-            btn_delete.setOnClickListener(new View.OnClickListener() {
+            btn_add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //remove contact from database
+                    //add contact to database
                     fuser= FirebaseAuth.getInstance().getCurrentUser();
 
                     reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
@@ -128,20 +119,18 @@ public class AddUserAdapter extends RecyclerView.Adapter<AddUserAdapter.ViewHold
                         });
 
                     reference= FirebaseDatabase.getInstance().getReference("Users").child(mUsers.get(getAdapterPosition()).getId());
-
-                    reference.addValueEventListener(new ValueEventListener(){
+                    reference.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            usersList.clear();
-                            for (DataSnapshot snapshot1 : snapshot.getChildren()) {
 
-                                User user = snapshot1.getValue(User.class);
-                                ContactItem contactItem = new ContactItem(user.getId(),user.getUsername(),"Request", user.getImageURL());
-                                user.addToContactList(contactItem);
+                            User user1 = snapshot.getValue(User.class);
+                            ContactItem contactItem = new ContactItem(user.getId(),"Request",user.getUsername(), user.getImageURL());
+                            user1.addToContactList(contactItem);
 
-                                reference.setValue(user);
-                                break;
-                            }
+                            reference.setValue(user1);
+                            notifyItemRangeChanged(getAdapterPosition(),mUsers.size());
+                            notifyItemRemoved(getAdapterPosition());
+                            //btn_add.setVisibility(View.INVISIBLE);
                         }
 
                         @Override
@@ -149,10 +138,24 @@ public class AddUserAdapter extends RecyclerView.Adapter<AddUserAdapter.ViewHold
 
                         }
                     });
+                    /*reference.addValueEventListener(new ValueEventListener(){
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                                User user = snapshot.getValue(User.class);
+                                ContactItem contactItem = new ContactItem(user.getId(),user.getUsername(),"Request", user.getImageURL());
+                                user.addToContactList(contactItem);
+
+                                reference.setValue(user);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });*/
                     //
-                    mUsers.remove(getAdapterPosition());
-                    notifyItemRangeChanged(getAdapterPosition(),mUsers.size());
-                    notifyItemRemoved(getAdapterPosition());
+                    //mUsers.remove(getAdapterPosition());
                 }
             });
 

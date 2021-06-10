@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,9 +26,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class AcceptUserAdapter extends RecyclerView.Adapter<AcceptUserAdapter.ViewHolder> {
+public class RequestUserAdapter extends RecyclerView.Adapter<RequestUserAdapter.ViewHolder> {
     private Context mContext;
     private List<User> mUsers;
     private boolean ischat;
@@ -38,7 +40,7 @@ public class AcceptUserAdapter extends RecyclerView.Adapter<AcceptUserAdapter.Vi
     private User user;
 
 
-    public AcceptUserAdapter(Context mContext, List<User> mUsers, boolean ischat){
+    public RequestUserAdapter(Context mContext, List<User> mUsers, boolean ischat){
         this.mUsers=mUsers;
         this.mContext=mContext;
         this.ischat=ischat;
@@ -48,7 +50,7 @@ public class AcceptUserAdapter extends RecyclerView.Adapter<AcceptUserAdapter.Vi
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.accept_user_item, parent,false);
-        return new AcceptUserAdapter.ViewHolder(view);
+        return new RequestUserAdapter.ViewHolder(view);
     }
 
     @Override
@@ -73,15 +75,6 @@ public class AcceptUserAdapter extends RecyclerView.Adapter<AcceptUserAdapter.Vi
             holder.img_on.setVisibility(View.GONE);
             holder.img_off.setVisibility(View.GONE);
         }
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mContext, MessageActivity.class);
-                intent.putExtra("userid", user.getId());
-                mContext.startActivity(intent);
-            }
-        });
     }
 
     @Override
@@ -94,7 +87,8 @@ public class AcceptUserAdapter extends RecyclerView.Adapter<AcceptUserAdapter.Vi
         public ImageView profile_image;
         private ImageView img_on;
         private ImageView img_off;
-        private ButtonBarLayout btn_accept;
+        private androidx.appcompat.widget.AppCompatButton btn_accept;
+        private androidx.appcompat.widget.AppCompatButton btn_reject;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -104,8 +98,57 @@ public class AcceptUserAdapter extends RecyclerView.Adapter<AcceptUserAdapter.Vi
             this.img_on = itemView.findViewById(R.id.img_on);
             this.img_off = itemView.findViewById(R.id.img_off);
             this.btn_accept = itemView.findViewById(R.id.btn_add_contact);
+            this.btn_reject = itemView.findViewById(R.id.btn_delete);
 
             btn_accept.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    usersList = new ArrayList<>();
+                    //remove contact from database
+                    fuser = FirebaseAuth.getInstance().getCurrentUser();
+
+                    reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
+
+                    reference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            user = snapshot.getValue(User.class);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+                    reference= FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
+
+                    reference.addValueEventListener(new ValueEventListener(){
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                User user1 = snapshot.getValue(User.class);
+                                for (ContactItem contactItem : user1.getContactList()){
+                                    if (contactItem.getId().equals(mUsers.get(getAdapterPosition()).getId())){
+                                        contactItem.setStatus("Friend");
+                                    }
+                                }
+
+                                reference.setValue(user);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                    //
+                    //mUsers.remove(getAdapterPosition());
+                    //notifyItemRangeChanged(getAdapterPosition(),mUsers.size());
+                    //notifyItemRemoved(getAdapterPosition());
+                }
+            });
+
+            btn_reject.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //remove contact from database
@@ -130,19 +173,15 @@ public class AcceptUserAdapter extends RecyclerView.Adapter<AcceptUserAdapter.Vi
                     reference.addValueEventListener(new ValueEventListener(){
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            usersList.clear();
-                            for (DataSnapshot snapshot1 : snapshot.getChildren()) {
-
-                                User user = snapshot1.getValue(User.class);
+                             User user = snapshot.getValue(User.class);
                                 for (ContactItem contactItem : user.getContactList()){
                                     if (contactItem.getId().equals(mUsers.get(getAdapterPosition()).getId())){
-                                        contactItem.setStatus("Friend");
+                                        contactItem.setStatus("Removed");
                                     }
                                 }
 
                                 reference.setValue(user);
-                                break;
-                            }
+
                         }
 
                         @Override
